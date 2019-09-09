@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %} GAN-SKETCH {% endblock title %}
+{% block style %}
+{% endblock style %}
+
+{% block content %}
+    <table class="table table-responsive">
+        <tbody>
+        {% for i in filenames %}
+            <tr>
+                <td align="center">
+                    <img src="{{ url_for('static',filename='sketch/'+i) }}" width="80%">
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
+
+
+{% block wizard %}
+<div class="pull-right">
+    <form action="/gen", method="post">
+        <button type="submit" class='btn btn-next btn-fill btn-outline-dark btn-wd' >생성</button>
+    </form>
+</div>
+<div class="pull-left">
+    <a class='btn btn-previous btn-fill btn-default btn-wd' href="/">다시 파일 선택</a>
+</div>
+{% endblock wizard %}
+
+{% block script %}
+{% endblock script %}
+
+

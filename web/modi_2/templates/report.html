@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %} GAN-REPORT {% endblock title %}
+{% block style %}
+{% endblock style %}
+
+{% block content %}
+    <table class="table table-responsive">
+        <tbody>
+            <tr>
+                <td align="center">
+                    <embed src={{ url_for('static', filename='research.pdf') }} width="80%"; height="900px"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock content %}
+
+
+{% block wizard %}
+<div class="pull-right">
+    <form action="/", method="post">
+        <button type="submit" class='btn btn-next btn-fill btn-outline-dark btn-wd'>Get Start!</button>
+    </form>
+</div>
+{% endblock wizard %}
+
+{% block script %}
+{% endblock script %}

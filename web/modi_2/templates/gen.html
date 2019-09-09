@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %} GAN-GENERATED {% endblock title %}
+{% block style %}
+{% endblock style %}
+
+{% block content %}
+    <table class="table table-responsive">
+        <tbody>
+            {% for i in filenames %}
+            <tr>
+                <td align="center">
+                    <img src="{{ url_for('static',filename='output/'+i) }}" width="50%">
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
+
+{% block wizard %}
+<div class="pull-right">
+    <a href={{ url_for('static', filename='output/fake0.jpg')}} download="Generated_image.jpg">
+        <i class="fas fa-download" style="font-size: 50px; color: #000000"></i>
+    </a>
+</div>
+{% endblock wizard %}
+
+
+{% block script %}{% endblock script %}

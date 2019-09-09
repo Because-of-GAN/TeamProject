@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} GAN-INPUT {% endblock title %}
+{% block style %}
+    {{ dropzone.load_css() }}
+    {{ dropzone.style('border: 2px dashed #0087F7; margin: 10px 0 10px; min-height: 400px;') }}
+{% endblock style %}
+
+{% block content %}
+    {{ dropzone.create('upload') }}
+{% endblock content %}
+
+{% block wizard %}
+<div class="pull-right">
+    <button id="upload" class='btn btn-next btn-fill btn-outline-dark btn-wd'>Upload</button>
+</div>
+
+{% endblock wizard %}
+
+{% block script %}
+    {{ dropzone.load_js() }}
+    {{ dropzone.config() }}
+{% endblock script %}

@@ -1,0 +1,24 @@
+<div>
+    <canvas id="cnvs" width="300" height="300" style="border: 1px solid black;"></canvas>
+    <br />
+    <div>
+        <!-- 도트크기 -->
+        <select id="dot">
+            <option value="1">1px</option>
+            <option value="2">2px</option>
+            <option value="5">5px</option>
+            <option value="10">10px</option>
+        </select>
+        &nbsp;
+        <!-- 색깔 -->
+        <select id="color">
+            <option value="rgb(0, 0, 0)">black</option>
+
+        </select>
+    </div>
+    <br />
+    <button id="btnDel">지우기</button>
+    &nbsp;
+    <button id="btnSave">저장하기</button>
+</div>
+{% block paint %}{% endblock paint %}

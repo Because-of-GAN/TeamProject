@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block title %} GAN-PAINT {% endblock title %}
+{% block style %}
+         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/normalize.css">
+
+    <link rel="stylesheet" type="text/css" href="http://fiddle.jshell.net/css/result-light.css">
+
+
+  <style id="compiled-css" type="text/css">
+      #canvas { border: 1px solid #000; }
+  </style>
+
+
+  <!-- TODO: Missing CoffeeScript 2 -->
+
+  <script type="text/javascript">//<![CDATA[
+
+
+    $(window).load(function(){
+
+    var DrawingTool = {
+        canvas   : null,
+        context  : null,
+        drawX    : [],
+        drawY    : [],
+        drawDrag : [],
+        drawColor: [],
+        isDraw   : false,
+        sizeTable : [
+            "1px",
+            "2px",
+            "5px",
+            "7px",
+            "10px",
+            "15px"
+        ],
+        colorTable : [
+            "#000000",
+            "#ff0000",
+            "#0000ff",
+            "#ffff00",
+            "#cb3594",
+            "#986828"
+        ]
+    };
+
+    DrawingTool.init = function() {
+        var self = this;
+        var offset = $("#canvas").offset();
+        this.canvas = document.getElementById("canvas");
+        this.context = this.canvas.getContext("2d");
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+
+        $("#canvas").mousedown(function(event) {
+            self.isDraw = true;
+            self.addDraw(event.pageX - offset.left, event.pageY - offset.top);
+            self.reDraw();
+        });
+
+        $("#canvas").mousemove(function(event) {
+            if(self.isDraw) {
+                self.addDraw(event.pageX - offset.left, event.pageY - offset.top, true);
+                self.reDraw();
+            }
+        });
+
+        $("#canvas").bind("mouseup mouseleave", function(event) {
+            self.isDraw = false;
+        });
+
+        this.setColorButton();
+        this.setResetButton();
+        };
+
+
+
+
+
+
+
+        DrawingTool.addDraw = function(x, y, drawing) {
+            this.drawX.push(x);
+            this.drawY.push(y);
+            this.drawDrag.push(drawing);
+            this.drawColor.push(this.selectedColor || this.sizeTable[0]);
+        };
+
+        DrawingTool.reDraw = function() {
+            this.context.lineJoin = "round";
+            this.context.lineWidth = 5;
+
+        for(var i = 0; i < this.drawX.length; i ++) {
+            this.context.beginPath();
+            if(this.drawDrag[i] && i) {
+                this.context.moveTo(this.drawX[i - 1], this.drawY[i - 1]);
+            } else {
+                this.context.moveTo(this.drawX[i] - 1, this.drawY[i]);
+            }
+
+            this.context.lineTo(this.drawX[i], this.drawY[i]);
+            this.context.closePath();
+            this.context.strokeStyle = this.drawColor[i];
+            this.context.stroke();
+        }
+    };
+
+    DrawingTool.setColorButton = function() {
+        var self = this;
+        $("#color > button").on("click", function(event) {
+            self.selectedColor = self.sizeTable[$(this).index()];
+        });
+    };
+
+    DrawingTool.setResetButton = function() {
+        var self = this;
+        $("#reset").on("click", function(event) {
+            self.canvas.width = self.canvas.width;
+            self.drawX = [], self.drawY = [], self.drawDrag = [], self.drawColor = [];
+        });
+    };
+
+    download_img = function(el) {
+      var image = canvas.toDataURL("image/jpg");
+      el.href = image;
+    };
+
+    var header = document.getElementById('url');
+    header.onclick = function() {
+        var a = document.getElementById('canvas').toDataURL("image/jpg");
+        document.getElementById('inputinput').setAttribute('value', a);
+    };
+
+
+    DrawingTool.init();
+
+    function post_to_url(path, params, method) {
+        method = method || "post";
+        // Set method to post by default, if not specified.
+        // The rest of this code assumes you are not using a library.
+        // It can be made less wordy if you use one.
+        var form = document.createElement("form");
+        form.setAttribute("method", method);
+        form.setAttribute("action", path);
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("name", 'url');
+        hiddenField.setAttribute("value", params);
+        form.appendChild(hiddenField);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+
+    });
+
+
+  //]]></script>
+
+{% endblock style %}
+
+{% block content %}
+    <div id="tools">
+        <p><button id="reset">RESET</button></p>
+    </div>
+    <canvas id="canvas" width="500" height="500" class="pull-left"></canvas>
+
+    <div class="pull-right" style="align-content: center">
+        <br>
+        <br>
+        <br>
+        <h1> 주의사항 </h1>
+        <h3> - 선은 끊어진 곳이 없어야 합니다. <br>
+             - 건물의 정면을 그리는 것을 권장합니다. <br>
+             - 건물은 바닥과 맞닿은 상태로 그려야합니다. <br>
+            <br>
+            <br>
+            <br>
+
+            <br>
+            <br>
+
+        </h3>
+
+    </div>
+    <div class="pull-right">
+
+{% endblock content %}
+
+{% block wizard %}
+<div class="pull-right">
+    <form action="/painting" method="post" name="form" >
+
+        <button type="submit" id="url" name="button" download="myImage.jpg" class='btn btn-next btn-fill btn-outline-dark btn-wd'>
+        <input type="hidden" id="inputinput" name="url" value="">
+    Download
+        </button>
+    </form>
+
+</div>
+{% endblock wizard %}
+
+{% block script %}
+  <script>
+    // tell the embed parent frame the height of the content
+    if (window.parent && window.parent.parent){
+      window.parent.parent.postMessage(["resultsFrame", {
+        height: document.body.getBoundingClientRect().height,
+        slug: "28wqq1gu"
+      }], "*")
+    }
+
+    // always overwrite window.name, in case users try to set it manually
+    window.name = "result"
+
+    function downloadCanvas(link, canvasId, filename) {
+         link.href = document.getElementById(canvas).toDataURL();
+         link.download = filename;
+      }
+
+  </script>
+{% endblock script %}
+
+
